@@ -10,11 +10,11 @@ export default function App() {
   const svgUri = Asset.fromModule(require('../assets/images/react.svg')).uri;
 
   return(
-    <GestureHandlerRootView className="flex-1">
+    <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaView style={styles.screen}>
         <StatusBar backgroundColor="#FFFFFF" />
 
-        <View className="flex flex-col justify-stretch h-full">
+        <View style={styles.body}>
 
           <View style={styles.headerContainer}>
             <Image
@@ -26,7 +26,16 @@ export default function App() {
               }}
             />
             <Text style={styles.headerTitle}>Welcome to chatterbot</Text>
-            <View className="flex flex-col"></View>
+            <View style={{
+              marginTop: 50,
+            }}>
+              <Text style={styles.headerSubtitle}>
+                Developed by
+              </Text>
+              <Text style={[styles.headerSubtitle, {color: '#FFA500'}]}>
+                Emmanuel Justin Atienza
+              </Text>
+            </View>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -58,6 +67,12 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'black'
   },
+  body: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    height: '100%',
+  },
   headerContainer: {
     position: 'relative',
     display: 'flex',
@@ -71,14 +86,22 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   headerTitle: {
+    textAlign: 'center',
     fontFamily: 'RubikMonoOne-Regular',
     fontSize: 30,
     lineHeight: 36,
     color: '#fff',
   },
+  headerSubtitle: {
+    textAlign: 'center',
+    fontFamily: 'RubikMonoOne-Regular',
+    fontSize: 15,
+    lineHeight: 21,
+    color: '#fff',
+  },
   buttonContainer: {
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
     marginBottom: 20,
     marginTop: 'auto',
   }
