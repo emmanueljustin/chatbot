@@ -8,7 +8,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        rubik: ["RubikMonoOne-Regular", "sans-serif"],
+        rubik: ["Rubik-VariableFont_wght", "sans-serif"],
+        rubikItalic: ["Rubik-Italic-VariableFont_wght", "sans-serif"],
+        rubikMono: ["RubikMonoOne-Regular", "sans-serif"],
         space: ["SpaceMono-Regular", "monospace"],
       }
     },

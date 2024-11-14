@@ -10,6 +10,8 @@ SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
 
   const [fontsLoaded, error] = useFonts({
+    "Rubik-VariableFont_wght": require("../assets/fonts/Rubik-VariableFont_wght.ttf"),
+    "Rubik-Italic-VariableFont_wght": require("../assets/fonts/Rubik-Italic-VariableFont_wght.ttf"),
     "RubikMonoOne-Regular": require("../assets/fonts/RubikMonoOne-Regular.ttf"),
     "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -24,7 +26,8 @@ const RootLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false }}/>
+      <Stack.Screen name='index' options={{ headerShown: false }} />
+      <Stack.Screen name='(home)' options={{ headerShown: false }} />
     </Stack>
   )
 }
