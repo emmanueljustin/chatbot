@@ -1,27 +1,30 @@
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image, Button } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CText from '@/components/CText';
 import NavButton from '@/components/navigation/NavButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { increment } from '../redux/counterSlice';
 
 const { height: windowHeight } = Dimensions.get('window');
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  const counter = useSelector((state: RootState) => state.counter.value);
+
   return (
     <SafeAreaView style={styles.body}>
-      <View style={styles.contextView}>
+      <View style={styles.contentView}>
         <Text style={styles.headerStyle}>
           Chatter
           <Text style={{ color: '#FFA500' }}>bot!</Text>
         </Text>
         
-        <View style={{
-          marginTop: 50,
-          backgroundColor: '#7dd3fc',
-          width: '100%',
-          borderRadius: 15,
-          padding: 20,
-        }}>
+        <View style={styles.getStartedBox}>
+          <Image
+            source={require("../../assets/images/robot-ai.png")}
+            style={styles.getStartedRobot}
+          />
           <Text style={{
             fontWeight: 'bold',
             fontSize: 24,
@@ -30,25 +33,18 @@ const HomeScreen = () => {
           </Text>
           <View style={{ 
             marginTop: 10,
-            width: '75%',
-
+            width: '65%',
           }}>
             <Text style={{
               fontWeight: '500',
               fontSize: 17,
             }}>
-              Harness the full power of AI through this app
+              Harness the full future of AI through this app with react natives new cutting edge tech
             </Text>
           </View>
         </View>
 
-        <View style={{
-          marginTop: 20,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+        <View style={styles.mainContentBox}>
           <View style={styles.contentBox}></View>
           <View style={styles.contentBox}></View>
         </View>
@@ -73,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F2937',
     height: '100%',
   },
-  contextView: {
+  contentView: {
     padding: 20,
     display: 'flex',
     flexDirection: 'column',
@@ -95,6 +91,29 @@ const styles = StyleSheet.create({
     fontSize: 27,
     lineHeight: 33,
     color: '#fff',
+  },
+  getStartedBox: {
+    position: 'relative',
+    marginTop: 50,
+    backgroundColor: '#7dd3fc',
+    width: '100%',
+    borderRadius: 15,
+    padding: 20,
+    overflow: 'hidden',
+  },
+  getStartedRobot: {
+    position: 'absolute',
+    right: -90,
+    bottom: -90,
+    height: 250,
+    width: 250,
+  },
+  mainContentBox: {
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   contentBox: {
     backgroundColor: '#374151',

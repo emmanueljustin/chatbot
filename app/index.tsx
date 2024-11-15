@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
-import { StatusBar } from "expo-status-bar";
 import NavButton from "@/components/navigation/NavButton";
 import CText from "@/components/CText";
+import { Link } from "expo-router";
 
 const App = () => {
 
@@ -11,42 +11,44 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <StatusBar backgroundColor="#FFFFFF" />
+      <ScrollView>
+        <StatusBar barStyle="light-content" backgroundColor="#1F2937" />
 
-      <View style={styles.body}>
+        <View style={styles.body}>
 
-        <View style={styles.headerContainer}>
-          <Image
-            source={require("../assets/images/robot.png")}
-            style={{
-              height: 150,
-              width: 150,
-              marginBottom: 50,
-            }}
-          />
-          <Text style={styles.headerTitle}>Welcome to chatterbot</Text>
-          <View style={{
-            marginTop: 50,
-          }}>
-            <Text style={styles.headerSubtitle}>
-              Developed by
-            </Text>
-            <Text style={[styles.headerSubtitle, {color: '#FFA500'}]}>
-              Emmanuel Justin Atienza
-            </Text>
+          <View  style={styles.headerContainer}>
+            <Image
+              source={require("../assets/images/robot.png")}
+              style={{
+                height: 150,
+                width: 150,
+                marginBottom: 50,
+              }}
+            />
+            <Text style={styles.headerTitle}>Welcome to chatterbot</Text>
+            <View style={{
+              marginTop: 50,
+            }}>
+              <Text style={styles.headerSubtitle}>
+                Developed by
+              </Text>
+              <Text style={[styles.headerSubtitle, {color: '#FFA500'}]}>
+                Emmanuel Justin Atienza
+              </Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.buttonContainer}>
-          <NavButton
-            navTo={'/home-screen'}
-            color="#38BDF8"
-          >
-            Next
-          </NavButton>
-        </View>
+          <View style={styles.buttonContainer}>
+            <NavButton
+              navTo={'/home-screen'}
+              color="#38BDF8"
+            >
+              Next
+            </NavButton>
+          </View>
 
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    backgroundColor: '#111827',
+    backgroundColor: '#1F2937b',
     overflow: 'hidden',
     padding: 40,
   },

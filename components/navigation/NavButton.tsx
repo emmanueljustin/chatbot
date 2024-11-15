@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Href, Link } from 'expo-router'
 
 interface Props {
-  navTo: Href<string | object>;
+  navTo: Href;
   color?: string;
   children: React.ReactNode;
 }
