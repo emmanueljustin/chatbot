@@ -14,7 +14,7 @@ const CreativeButton = (props: Props) => {
     <TouchableOpacity
       onPress={props.onPressed}
       activeOpacity={0.7}
-      className={`${props.isLoading ? `opacity-65` : ``} rounded-full w-full px-5 py-3 flex justify-center items-center ${props.colors}`}
+      className={`${props.isLoading ? `opacity-65` : ``} rounded-lg w-full px-5 py-3 flex justify-center items-center ${props.colors}`}
       disabled={props.isLoading}
       style={{
         elevation: 20,
