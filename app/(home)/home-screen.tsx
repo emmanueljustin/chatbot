@@ -2,16 +2,8 @@ import { StyleSheet, Text, View, Dimensions, Image, Button } from 'react-native'
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NavButton from '@/components/navigation/NavButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { increment } from '../redux/counterSlice';
-
-const { height: windowHeight } = Dimensions.get('window');
 
 const HomeScreen = () => {
-  const dispatch = useDispatch();
-  const counter = useSelector((state: RootState) => state.counter.value);
-
   return (
     <SafeAreaView style={styles.body}>
       <View style={styles.contentView}>
@@ -39,7 +31,7 @@ const HomeScreen = () => {
               fontWeight: '500',
               fontSize: 17,
             }}>
-              Harness the full future of AI through this app with react natives new cutting edge tech
+              Harness the future of AI through this app with react natives new cutting edge tech
             </Text>
           </View>
         </View>
@@ -51,10 +43,10 @@ const HomeScreen = () => {
 
         <View style={{ marginTop: 'auto' }}>
           <NavButton
-            navTo={'/'}
+            navTo={'/chat-screen'}
             color='#38BDF8'
           >
-            Chat with Bot
+            Chat
           </NavButton>
         </View>
       </View>
@@ -66,7 +58,7 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: '#1F2937',
+    backgroundColor: '#424242',
     height: '100%',
   },
   contentView: {

@@ -12,7 +12,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView>
-        <StatusBar barStyle="light-content" backgroundColor="#1F2937" />
+        <StatusBar barStyle="light-content" backgroundColor="#424242" />
 
         <View style={styles.body}>
 
@@ -58,7 +58,7 @@ export default App
 const styles = StyleSheet.create({
   screen: {
     height: '100%',
-    backgroundColor: '#1F2937'
+    backgroundColor: '#424242'
   },
   body: {
     display: 'flex',
