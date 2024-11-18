@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, Dimensions, Image, Button } from 'react-native'
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NavButton from '@/components/navigation/NavButton';
+import IconAnt from 'react-native-vector-icons/AntDesign';
+import IconEnt from 'react-native-vector-icons/Entypo';
 
 const HomeScreen = () => {
   return (
@@ -9,7 +11,7 @@ const HomeScreen = () => {
       <View style={styles.contentView}>
         <Text style={styles.headerStyle}>
           Chatter
-          <Text style={{ color: '#FFA500' }}>bot!</Text>
+          <Text style={{ color: '#FBBF24' }}>bot!</Text>
         </Text>
         
         <View style={styles.getStartedBox}>
@@ -31,20 +33,34 @@ const HomeScreen = () => {
               fontWeight: '500',
               fontSize: 17,
             }}>
-              Harness the future of AI through this app with react natives new cutting edge tech
+              Transform Your Interactions Powered by Gemini AI.
             </Text>
           </View>
         </View>
 
         <View style={styles.mainContentBox}>
-          <View style={styles.contentBox}></View>
-          <View style={styles.contentBox}></View>
+          <View style={styles.contentBox}>
+            <View style={styles.iconContainer}>
+              <IconAnt name='staro' size={20} color={'#89D9F2'} />
+            </View>
+            <Text style={styles.contentText}>
+              Generate new ideas and increase your productivity
+            </Text>
+          </View>
+          <View style={styles.contentBox}>
+            <View style={styles.iconContainer}>
+              <IconEnt name='code' size={20} color={'#89D9F2'} />
+            </View>
+            <Text style={styles.contentText}>
+              Open source and free
+            </Text>
+          </View>
         </View>
 
         <View style={{ marginTop: 'auto' }}>
           <NavButton
             navTo={'/chat-screen'}
-            color='#38BDF8'
+            color='#89D9F2'
           >
             Chat
           </NavButton>
@@ -58,7 +74,7 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: '#424242',
+    backgroundColor: '#141414',
     height: '100%',
   },
   contentView: {
@@ -87,7 +103,7 @@ const styles = StyleSheet.create({
   getStartedBox: {
     position: 'relative',
     marginTop: 50,
-    backgroundColor: '#7dd3fc',
+    backgroundColor: '#89D9F2',
     width: '100%',
     borderRadius: 15,
     padding: 20,
@@ -105,15 +121,33 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   contentBox: {
-    backgroundColor: '#374151',
+    backgroundColor: '#232323',
     borderWidth: 0.5,
-    borderColor: '#4B5563',
     borderRadius: 15,
-    height: 150,
+    // height: 150,
     width: '47%',
     overflow: 'hidden',
+    padding: 15,
+  },
+  iconContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
+    padding: 10,
+    backgroundColor: '#4B5563',
+    overflow: 'hidden',
+  },
+  contentText: {
+    marginTop: 10,
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
   },
 })

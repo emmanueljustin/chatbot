@@ -1,29 +1,28 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { sendMessage, writeMessage } from '../redux/chatSlice';
+import { askGemini, writeMessage } from '../redux/chatSlice';
+import { useEffect, useRef } from 'react';
+import { EventStatus } from '@/enums/status';
 
 const ChatScreen = () => {
-  const dispatch = useDispatch();
-  const message = useSelector((state: RootState) => state.chat.message);
+  const dispatch = useDispatch<AppDispatch>();
+  const { message, convHistory, status, error } = useSelector((state: RootState) => state.chat);
 
-  const messageHistory = [
-    {
-      from: 'user',
-      message: 'Hello! My name is Emmanuel Justin Atienza'
-    },
-    {
-      from: 'bot',
-      message: 'Hello Emmanuel Justin Atienza how can I help you?'
-    },
-  ];
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [convHistory]);
 
   return (
     <SafeAreaView style={styles.body}>
       <View style={styles.contentView}>
-        <ScrollView style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>
-          {messageHistory.map((msg, index) => (
+        <ScrollView ref={scrollViewRef} style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>
+          {convHistory.map((msg, index) => (
             <View
               key={index}
               style={[
@@ -37,6 +36,11 @@ const ChatScreen = () => {
               <Text style={styles.messageText}>{msg.message}</Text>
             </View>
           ))}
+          {status === EventStatus.loading && (
+            <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
+              <Text style={styles.messageText}>Bot is responding....</Text>
+            </View>
+          )}
         </ScrollView>
         <View style={styles.userInputContainer}>
           <TextInput 
@@ -46,7 +50,22 @@ const ChatScreen = () => {
             value={message}
             onChangeText={(e) => dispatch(writeMessage({message: e}))}
           />
-          <TouchableOpacity activeOpacity={0.5} style={styles.sendBtn} onPress={() => dispatch(sendMessage())}>
+          <TouchableOpacity
+            activeOpacity={message === '' && status === EventStatus.loading ? 1 : 0.5}
+            style={[
+              styles.sendBtn,
+              { 
+                backgroundColor: status !== EventStatus.loading ? 'rgba(30, 64, 175, 0.8)' : '#6b7280',
+              }
+            ]}
+            onPress={() => {
+              if (message !== '' && status !== EventStatus.loading) {
+                dispatch(askGemini({message: message}));
+              } else {
+                console.log('no message is written');
+              }
+            }}
+          >
             <Icon name='send' size={20} color={'#fff'} />
           </TouchableOpacity>
         </View>
@@ -59,7 +78,7 @@ export default ChatScreen
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: '#424242',
+    backgroundColor: '#141414',
     height: '100%',
   },
   contentView: {
@@ -80,13 +99,12 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   userInputContainer: {
-    paddingHorizontal: 10,
+    padding: 10,
     marginTop: 'auto',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
   },
   messageBubble: {
     flexDirection: 'row',
@@ -115,6 +133,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     borderRadius: 10,
-    backgroundColor: 'rgba(30, 64, 175, 0.8)',
   },
 })

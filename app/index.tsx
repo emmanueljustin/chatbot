@@ -12,7 +12,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView>
-        <StatusBar barStyle="light-content" backgroundColor="#424242" />
+        <StatusBar barStyle="light-content" backgroundColor="#141414" />
 
         <View style={styles.body}>
 
@@ -32,7 +32,7 @@ const App = () => {
               <Text style={styles.headerSubtitle}>
                 Developed by
               </Text>
-              <Text style={[styles.headerSubtitle, {color: '#FFA500'}]}>
+              <Text style={[styles.headerSubtitle, {color: '#FBBF24'}]}>
                 Emmanuel Justin Atienza
               </Text>
             </View>
@@ -41,7 +41,7 @@ const App = () => {
           <View style={styles.buttonContainer}>
             <NavButton
               navTo={'/home-screen'}
-              color="#38BDF8"
+              color="#89D9F2"
             >
               Next
             </NavButton>
@@ -58,7 +58,7 @@ export default App
 const styles = StyleSheet.create({
   screen: {
     height: '100%',
-    backgroundColor: '#424242'
+    backgroundColor: '#141414'
   },
   body: {
     display: 'flex',
