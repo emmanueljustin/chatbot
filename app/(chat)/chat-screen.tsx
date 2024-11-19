@@ -3,16 +3,36 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { askGemini, writeMessage } from '../redux/chatSlice';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { EventStatus } from '@/enums/status';
+import { CodeSnippet } from '@/components/CodeSnippet';
+
+const extractCode = (extract: string): string[] => {
+  const regex = /```(.*?)```/gs;
+  const matches: string[] = [];
+  let match;
+
+  while ((match = regex.exec(extract)) !== null) {
+    matches.push(match[1].trim());
+  }
+  return matches;
+};
 
 const ChatScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status, error } = useSelector((state: RootState) => state.chat);
 
+  const [extractedCode, setExtractedCode] = useState<string[]>([]);
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
+    if (convHistory.length > 0) {
+      if (convHistory[convHistory.length - 1].from === 'bot') {
+        const extracted = extractCode(convHistory[convHistory.length - 1].message)
+        setExtractedCode(extracted);
+      }
+    }
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
@@ -28,7 +48,7 @@ const ChatScreen = () => {
               style={[
                 styles.messageBubble,
                 {
-                  backgroundColor: msg.from === 'user' ? '#38BDf8' : '#FFA500',
+                  backgroundColor: msg.from === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
                   alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
                 }
               ]}
@@ -36,6 +56,13 @@ const ChatScreen = () => {
               <Text style={styles.messageText}>{msg.message}</Text>
             </View>
           ))}
+          <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
+            {extractedCode.map((code, index) => (
+              <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
+                <CodeSnippet code={code} />
+              </View>
+            ))}
+          </View>
           {status === EventStatus.loading && (
             <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
               <Text style={styles.messageText}>Bot is responding....</Text>
@@ -45,6 +72,7 @@ const ChatScreen = () => {
         <View style={styles.userInputContainer}>
           <TextInput 
             style={styles.input}
+            multiline={true}
             placeholder='Type your question here'
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
             value={message}
@@ -67,7 +95,7 @@ const ChatScreen = () => {
             }}
           >
             <Icon name='send' size={20} color={'#fff'} />
-          </TouchableOpacity>
+          </TouchableOpacity> 
         </View>
       </View>
     </SafeAreaView>
@@ -104,7 +132,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   messageBubble: {
     flexDirection: 'row',
@@ -117,7 +145,7 @@ const styles = StyleSheet.create({
   messageText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   input: {
     width: '80%',

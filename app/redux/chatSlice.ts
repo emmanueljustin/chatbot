@@ -24,7 +24,8 @@ const initialState: ChatState = {
 export const askGemini = createAsyncThunk(
   'chat/askGemini',
   async (query: SendMessagePayload) => {
-    const response = await useGemini.post(`?key={apiKey}`, query.message);
+    const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+    const response = await useGemini.post(`?key=${apiKey}`, query.message);
     return response.data;
   }
 );
