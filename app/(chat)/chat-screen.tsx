@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -29,7 +29,7 @@ const ChatScreen = () => {
   useEffect(() => {
     if (convHistory.length > 0) {
       if (convHistory[convHistory.length - 1].from === 'bot') {
-        const extracted = extractCode(convHistory[convHistory.length - 1].message)
+        const extracted = extractCode(convHistory[convHistory.length - 1].message);
         setExtractedCode(extracted);
       }
     }
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   msgBox: {
     flex: 1,
     padding: 10,
-
   },
   msgBoxContent: {
     flexGrow: 1,
