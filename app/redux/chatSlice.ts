@@ -63,6 +63,7 @@ const chatSlice = createSlice({
     builder.addCase(askGemini.rejected, (state) => {
       state.status = EventStatus.failed;
       state.error = 'Something went wrong';
+      console.log(state.error);
     });
   }
 });

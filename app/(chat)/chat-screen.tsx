@@ -6,33 +6,17 @@ import { askGemini, writeMessage } from '../redux/chatSlice';
 import { useEffect, useRef, useState } from 'react';
 import { EventStatus } from '@/enums/status';
 import { CodeSnippet } from '@/components/CodeSnippet';
-
-const extractCode = (extract: string): string[] => {
-  const regex = /```(.*?)```/gs;
-  const matches: string[] = [];
-  let match;
-
-  while ((match = regex.exec(extract)) !== null) {
-    matches.push(match[1].trim());
-  }
-  return matches;
-};
+import useCodeExtractor from '@/hooks/useCodeExtractor';
 
 const ChatScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status, error } = useSelector((state: RootState) => state.chat);
 
-  const [extractedCode, setExtractedCode] = useState<string[]>([]);
+  const extractedCode = useCodeExtractor({ convHistory: convHistory });
 
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    if (convHistory.length > 0) {
-      if (convHistory[convHistory.length - 1].from === 'bot') {
-        const extracted = extractCode(convHistory[convHistory.length - 1].message);
-        setExtractedCode(extracted);
-      }
-    }
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
