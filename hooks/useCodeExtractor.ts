@@ -1,8 +1,8 @@
-import Message from "@/interfaces/message";
+import MessageHistory from "@/interfaces/message-history";
 import { useEffect, useState } from "react";
 
 interface Props {
-  convHistory: Message[];
+  convHistory: MessageHistory[];
 }
 
 const extractCode = (extract: string): string[] => {
@@ -22,8 +22,8 @@ const useCodeExtractor = (props: Props) => {
   useEffect(() => {
     if (props.convHistory.length > 0) {
       const latestMessage = props.convHistory[props.convHistory.length - 1];
-      if (latestMessage.from === 'bot') {
-        const extracted = extractCode(latestMessage.message);
+      if (latestMessage.role === 'model') {
+        const extracted = extractCode(latestMessage.parts[0].text);
         setExtractedCode(extracted);
       }
     }

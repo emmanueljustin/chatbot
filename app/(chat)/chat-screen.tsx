@@ -32,12 +32,12 @@ const ChatScreen = () => {
               style={[
                 styles.messageBubble,
                 {
-                  backgroundColor: msg.from === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
-                  alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
+                  backgroundColor: msg.role === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
+                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
                 }
               ]}
             >
-              <Text style={styles.messageText}>{msg.message}</Text>
+              <Text style={styles.messageText}>{msg.parts[0].text}</Text>
             </View>
           ))}
           <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
