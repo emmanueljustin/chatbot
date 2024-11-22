@@ -1,11 +1,59 @@
-import { StyleSheet, Text, View, Dimensions, Image, Button } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NavButton from '@/components/navigation/NavButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
+import { collection, addDoc, onSnapshot } from 'firebase/firestore'
+import { db } from '@/FirebaseConfig';
 
 const HomeScreen = () => {
+
+  interface Users {
+    born: number;
+    first: string;
+    last: string;
+  }
+
+  const [data, setData] = useState<Users[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, 'users'),
+      (querySnapshot) => {
+        const usersData: Users[] = [];
+        querySnapshot.forEach((doc) => {
+          const user = doc.data();
+          usersData.push({
+            first: user.first,
+            last: user.last,
+            born: user.born,
+          });
+        });
+        setData(usersData); // Update the state with the fetched data
+      },
+      (error) => {
+        console.error('Error fetching data: ', error);
+      }
+    );
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const AddData = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        first: "Ada",
+        last: "Lovelace",
+        born: 1815
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.body}>
       <View style={styles.contentView}>
@@ -13,6 +61,10 @@ const HomeScreen = () => {
           Chatter
           <Text style={{ color: '#FBBF24' }}>bot!</Text>
         </Text>
+
+        {data.map((users, index) => (
+          <Text key={index} style={{ fontWeight: 'bold', color: '#fff' }}>{users.first}</Text>
+        ))}
         
         <View style={styles.getStartedBox}>
           <Image
@@ -47,6 +99,7 @@ const HomeScreen = () => {
               Generate new ideas and increase your productivity
             </Text>
           </View>
+
           <View style={styles.contentBox}>
             <View style={styles.iconContainer}>
               <IconEnt name='code' size={20} color={'#89D9F2'} />
@@ -65,6 +118,8 @@ const HomeScreen = () => {
             Chat
           </NavButton>
         </View>
+
+        {/* <Button title='Add Data' onPress={() => AddData()} /> */}
       </View>
     </SafeAreaView>
   )
