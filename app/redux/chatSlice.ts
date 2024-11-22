@@ -1,12 +1,12 @@
-import useGemini from "@/axios/axios-instance";
-import Message from "@/interfaces/message";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { EventStatus } from "@/enums/status";
+import MessageHistory from "@/interfaces/message-history";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 interface ChatState {
   status: EventStatus;
   message: string;
-  convHistory: Message[];
+  convHistory: MessageHistory[];
   error: string;
 }
 
@@ -21,12 +21,50 @@ const initialState: ChatState = {
   error: '',
 }
 
+// This is the settings for Gemini Generative Model Api
+const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+if (!apiKey) {
+  throw new Error("API Key is not defined in the environment variables.");
+}
+const genAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: "after every message add this line 'Meep morp ~ 🤖'",
+});
+const generationConfig = {
+  temperature: 1,
+  topP: 0.95,
+  topK: 40,
+  maxOutputTokens: 8192,
+  responseMimeType: "text/plain",
+};
+
 export const askGemini = createAsyncThunk(
   'chat/askGemini',
-  async (query: SendMessagePayload) => {
-    const apiKey = process.env.EXPO_PUBLIC_API_KEY;
-    const response = await useGemini.post(`?key=${apiKey}`, query.message);
-    return response.data;
+  async (query: SendMessagePayload, { getState, rejectWithValue }) => {
+    const { convHistory } = (getState() as { chat: ChatState }).chat;
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        ...convHistory.map(msg => ({
+          role: msg.role,
+          parts: msg.parts.map(part => ({ text: part.text })),
+        })),
+        {
+          role: 'user',
+          parts: [{ text: query.message }]
+        },
+      ],
+    });
+
+    try {
+      const result = await chatSession.sendMessage(query.message);
+
+      return result.response.text();
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -43,8 +81,8 @@ const chatSlice = createSlice({
       state.status = EventStatus.loading;
       if (state.message !== '') {
         state.convHistory.push({
-          from: 'user',
-          message: state.message
+          role: 'user',
+          parts: [{ text: state.message }]
         });
       }
       console.log(state.convHistory);
@@ -54,8 +92,8 @@ const chatSlice = createSlice({
     builder.addCase(askGemini.fulfilled, (state, action) => {
       state.status = EventStatus.success;
       state.convHistory.push({
-        from: 'bot',
-        message: action.payload.candidates[0].content.parts[0].text,
+        role: 'model',
+        parts: [{ text: action.payload }],
       });
       console.log(state.convHistory);
     });
