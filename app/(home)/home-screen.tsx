@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NavButton from '@/components/navigation/NavButton';
@@ -6,6 +6,7 @@ import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/FirebaseConfig';
+import HistorySection from './history-section';
 
 const HomeScreen = () => {
 
@@ -30,14 +31,13 @@ const HomeScreen = () => {
             born: user.born,
           });
         });
-        setData(usersData); // Update the state with the fetched data
+        setData(usersData);
       },
       (error) => {
         console.error('Error fetching data: ', error);
       }
     );
 
-    // Cleanup listener on unmount
     return () => unsubscribe();
   }, []);
 
@@ -110,6 +110,8 @@ const HomeScreen = () => {
           </View>
         </View>
 
+        <HistorySection />
+
         <View style={{ marginTop: 'auto' }}>
           <NavButton
             navTo={'/chat-screen'}
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: '100%',
-    backgroundColor: '#9ca3af',
+    backgroundColor: '#9CA3AF',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
     display: 'flex',
