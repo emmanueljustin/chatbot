@@ -1,18 +1,13 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
-import MessageHistory from '@/interfaces/message-history';
+import History from '@/interfaces/history';
 
 const HistorySection = () => {
 
   const [chatHistory, setChatHistory] = useState<History[]>([])
-
-  interface History {
-    chatTitle: String;
-    history: MessageHistory[]
-  }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -22,8 +17,9 @@ const HistorySection = () => {
         querySnapshot.forEach((doc) => {
           const chat = doc.data();
           messageHistory.push({
-            chatTitle: chat.data.chatTitle,
-            history: chat.data.history,
+            uid: doc.id,
+            chatTitle: chat.chatTitle,
+            history: chat.history,
           });
         });
         setChatHistory(messageHistory);
@@ -34,7 +30,7 @@ const HistorySection = () => {
     );
 
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <>
@@ -46,7 +42,12 @@ const HistorySection = () => {
         marginBottom: 10,
       }}>
         {chatHistory.map((chats, index) => (
-          <View key={index} style={styles.historyTile}>
+          <TouchableOpacity
+            activeOpacity={0.65}
+            key={index}
+            style={styles.historyTile}
+            onPress={() => console.log(chats.uid)}
+          >
             <Text 
               style={styles.tileText}
               numberOfLines={1}
@@ -55,7 +56,7 @@ const HistorySection = () => {
               {chats.chatTitle}
             </Text>
             <IconAnt name='caretright' size={15} color={'#fff'} />
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </>
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     padding: 15,
     width: '100%',
     borderRadius: 5,
-    backgroundColor: '#232323',
-    borderColor: '#89D9F2',
+    backgroundColor: 'rgba(51, 51, 51, 1)',
+    // borderColor: '#89D9F2',
     borderWidth: 0.8
   },
   tileText: {

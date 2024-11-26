@@ -114,7 +114,7 @@ const HomeScreen = () => {
 
         <View style={{ marginTop: 'auto' }}>
           <NavButton
-            navTo={'/chat-screen'}
+            navTo={'/chat'}
             color='#89D9F2'
           >
             Chat

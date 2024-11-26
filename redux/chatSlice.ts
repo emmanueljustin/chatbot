@@ -2,11 +2,15 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { EventStatus } from "@/enums/status";
 import MessageHistory from "@/interfaces/message-history";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/FirebaseConfig";
 
 interface ChatState {
   status: EventStatus;
   message: string;
   convHistory: MessageHistory[];
+  showModal: boolean;
+  chatTitle: string;
   error: string;
 }
 
@@ -18,6 +22,8 @@ const initialState: ChatState = {
   status: EventStatus.initial,
   message: '',
   convHistory: [],
+  showModal: false,
+  chatTitle: '',
   error: '',
 }
 
@@ -38,6 +44,28 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "text/plain",
 };
+
+export const saveChat = createAsyncThunk(
+  'chat/saveChat',
+  async (title: string, { getState, rejectWithValue }) => {
+    const { convHistory } = (getState() as { chat: ChatState }).chat;
+
+    try {
+      const docRef = addDoc(collection(db, 'chat-history'), {
+        chatTitle: title,
+        history: [
+          ...convHistory.map(msg => ({
+            role: msg.role,
+            parts: msg.parts.map(part => ({ text: part.text })),
+          })),
+        ],
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      return rejectWithValue(e);
+    }
+  }
+);
 
 export const askGemini = createAsyncThunk(
   'chat/askGemini',
@@ -75,6 +103,12 @@ const chatSlice = createSlice({
     writeMessage: (state, actions: PayloadAction<SendMessagePayload>) => {
       state.message = actions.payload.message;
     },
+    triggerPopup: (state, actions: PayloadAction<boolean>) => {
+      state.showModal = actions.payload;
+    },
+    setChatTitle: (state, actions: PayloadAction<string>) => {
+      state.chatTitle = actions.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(askGemini.pending, (state) => {
@@ -103,8 +137,12 @@ const chatSlice = createSlice({
       state.error = 'Something went wrong';
       console.log(state.error);
     });
+
+    builder.addCase(saveChat.pending, (state) => {
+      state.showModal = false;
+    });
   }
 });
 
-export const { writeMessage } = chatSlice.actions;
+export const { writeMessage, triggerPopup, setChatTitle } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -40,7 +40,7 @@ const App = () => {
 
           <View style={styles.buttonContainer}>
             <NavButton
-              navTo={'/home-screen'}
+              navTo={'/home'}
               color="#89D9F2"
             >
               Next

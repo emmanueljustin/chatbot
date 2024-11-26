@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Stack, SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import store from '../redux/store';
 
 import "../assets/global.css"
 
@@ -29,8 +29,8 @@ const RootLayout = () => {
     <Provider store={store}>
       <Stack>
         <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(home)' options={{ headerShown: false }} />
-        <Stack.Screen name='(chat)' options={{ headerShown: false }} />
+        <Stack.Screen name='home' options={{ headerShown: false }} />
+        <Stack.Screen name='chat' options={{ headerShown: false }} />
       </Stack>
     </Provider>
   )

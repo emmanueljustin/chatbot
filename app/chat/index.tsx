@@ -1,16 +1,17 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Modal } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { askGemini, writeMessage } from '../redux/chatSlice';
+import { askGemini, writeMessage } from '../../redux/chatSlice';
 import { useEffect, useRef, useState } from 'react';
 import { EventStatus } from '@/enums/status';
 import { CodeSnippet } from '@/components/CodeSnippet';
 import useCodeExtractor from '@/hooks/useCodeExtractor';
+import SaveModal from './save-modal';
 
 const ChatScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { message, convHistory, status, error } = useSelector((state: RootState) => state.chat);
+  const { message, convHistory, status } = useSelector((state: RootState) => state.chat);
 
   const extractedCode = useCodeExtractor({ convHistory: convHistory });
 
@@ -24,6 +25,9 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.body}>
+
+      <SaveModal />
+
       <View style={styles.contentView}>
         <ScrollView ref={scrollViewRef} style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>
           {convHistory.map((msg, index) => (
