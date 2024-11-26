@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import History from '@/interfaces/history';
+import { useRouter } from 'expo-router';
 
 const HistorySection = () => {
-
+  const router = useRouter();
   const [chatHistory, setChatHistory] = useState<History[]>([])
 
   useEffect(() => {
@@ -46,7 +47,9 @@ const HistorySection = () => {
             activeOpacity={0.65}
             key={index}
             style={styles.historyTile}
-            onPress={() => console.log(chats.uid)}
+            onPress={() => {
+              router.push({pathname: '/chat', params: { chats: JSON.stringify(chats) }});
+            }}
           >
             <Text 
               style={styles.tileText}

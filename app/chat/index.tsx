@@ -8,8 +8,16 @@ import { EventStatus } from '@/enums/status';
 import { CodeSnippet } from '@/components/CodeSnippet';
 import useCodeExtractor from '@/hooks/useCodeExtractor';
 import SaveModal from './save-modal';
+import { useGlobalSearchParams } from 'expo-router';
+import History from '@/interfaces/history';
+import { parse } from '@babel/core';
 
 const ChatScreen = () => {
+
+  const { chats } = useGlobalSearchParams<{ chats: string }>();
+
+  const parsedChats: History | undefined = chats ? JSON.parse(chats) : undefined;
+
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status } = useSelector((state: RootState) => state.chat);
 
@@ -25,6 +33,8 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.body}>
+
+      {/* <Text style={{color: '#fff'}}>{parsedChats?.chatTitle}</Text> */}
 
       <SaveModal />
 
