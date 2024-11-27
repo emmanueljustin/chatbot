@@ -1,9 +1,7 @@
 import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
-import NavButton from "@/components/navigation/NavButton";
-import CText from "@/components/CText";
-import { Link } from "expo-router";
+import NavButton from "../components/navigation/NavButton";
 
 const App = () => {
 

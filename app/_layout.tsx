@@ -27,10 +27,13 @@ const RootLayout = () => {
 
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='home' options={{ headerShown: false }} />
-        <Stack.Screen name='chat' options={{ headerShown: false }} />
+      <Stack screenOptions={{
+        animation: 'none',
+        headerShown: false,
+      }}>
+        <Stack.Screen name='index' />
+        <Stack.Screen name='home' />
+        <Stack.Screen name='chat' />
       </Stack>
     </Provider>
   )

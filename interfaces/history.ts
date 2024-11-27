@@ -1,7 +1,8 @@
 import MessageHistory from "./message-history";
 
 export default interface History {
+  from?: string;
   uid: string;
-  chatTitle: String;
+  chatTitle: string;
   history: MessageHistory[]
 }

@@ -3,7 +3,8 @@ import { EventStatus } from "@/enums/status";
 import MessageHistory from "@/interfaces/message-history";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/FirebaseConfig";
+import { db } from "../firebaseConfig";
+import History from '@/interfaces/history';
 
 interface ChatState {
   status: EventStatus;
@@ -109,6 +110,9 @@ const chatSlice = createSlice({
     setChatTitle: (state, actions: PayloadAction<string>) => {
       state.chatTitle = actions.payload;
     },
+    setConvHistory: (state, actions: PayloadAction<MessageHistory[]>) => {
+      state.convHistory = actions.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(askGemini.pending, (state) => {
@@ -144,5 +148,5 @@ const chatSlice = createSlice({
   }
 });
 
-export const { writeMessage, triggerPopup, setChatTitle } = chatSlice.actions;
+export const { writeMessage, triggerPopup, setChatTitle, setConvHistory } = chatSlice.actions;
 export default chatSlice.reducer;

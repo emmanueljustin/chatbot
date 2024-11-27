@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import NavButton from '@/components/navigation/NavButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/FirebaseConfig';
+// import { collection, addDoc, onSnapshot } from 'firebase/firestore'
+// import { db } from '@/FirebaseConfig';
 import HistorySection from './history-section';
+import { useRouter } from 'expo-router';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { setConvHistory } from '../../redux/chatSlice';
+import CButton from '../../components/CButton';
 
 const HomeScreen = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
 
   interface Users {
     born: number;
@@ -16,43 +21,45 @@ const HomeScreen = () => {
     last: string;
   }
 
-  const [data, setData] = useState<Users[]>([]);
+  const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, 'users'),
-      (querySnapshot) => {
-        const usersData: Users[] = [];
-        querySnapshot.forEach((doc) => {
-          const user = doc.data();
-          usersData.push({
-            first: user.first,
-            last: user.last,
-            born: user.born,
-          });
-        });
-        setData(usersData);
-      },
-      (error) => {
-        console.error('Error fetching data: ', error);
-      }
-    );
+  // const [data, setData] = useState<Users[]>([]);
 
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(
+  //     collection(db, 'users'),
+  //     (querySnapshot) => {
+  //       const usersData: Users[] = [];
+  //       querySnapshot.forEach((doc) => {
+  //         const user = doc.data();
+  //         usersData.push({
+  //           first: user.first,
+  //           last: user.last,
+  //           born: user.born,
+  //         });
+  //       });
+  //       setData(usersData);
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching data: ', error);
+  //     }
+  //   );
 
-  const AddData = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  }
+  //   return () => unsubscribe();
+  // }, []);
+
+  // const AddData = async () => {
+  //   try {
+  //     const docRef = await addDoc(collection(db, "users"), {
+  //       first: "Ada",
+  //       last: "Lovelace",
+  //       born: 1815
+  //     });
+  //     console.log("Document written with ID: ", docRef.id);
+  //   } catch (e) {
+  //     console.error("Error adding document: ", e);
+  //   }
+  // }
 
   return (
     <SafeAreaView style={styles.body}>
@@ -62,9 +69,9 @@ const HomeScreen = () => {
           <Text style={{ color: '#FBBF24' }}>bot!</Text>
         </Text>
 
-        {data.map((users, index) => (
+        {/* {data.map((users, index) => (
           <Text key={index} style={{ fontWeight: 'bold', color: '#fff' }}>{users.first}</Text>
-        ))}
+        ))} */}
         
         <View style={styles.getStartedBox}>
           <Image
@@ -75,7 +82,7 @@ const HomeScreen = () => {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-            Get Started
+            Welcome
           </Text>
           <View style={{ 
             marginTop: 10,
@@ -113,12 +120,13 @@ const HomeScreen = () => {
         <HistorySection />
 
         <View style={{ marginTop: 'auto' }}>
-          <NavButton
-            navTo={'/chat'}
-            color='#89D9F2'
-          >
-            Chat
-          </NavButton>
+          <CButton
+            children='Chats'
+            onPress={() => {
+              dispatch(setConvHistory([]));
+              router.push('/chat');
+            }}
+          />
         </View>
 
         {/* <Button title='Add Data' onPress={() => AddData()} /> */}

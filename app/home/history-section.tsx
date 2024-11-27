@@ -2,11 +2,17 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import React, { useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '@/FirebaseConfig';
-import History from '@/interfaces/history';
+import { db } from '../../firebaseConfig';
+import History from '../../interfaces/history';
 import { useRouter } from 'expo-router';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { setConvHistory } from '../../redux/chatSlice';
 
 const HistorySection = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const router = useRouter();
   const [chatHistory, setChatHistory] = useState<History[]>([])
 
@@ -18,6 +24,7 @@ const HistorySection = () => {
         querySnapshot.forEach((doc) => {
           const chat = doc.data();
           messageHistory.push({
+            from: 'history',
             uid: doc.id,
             chatTitle: chat.chatTitle,
             history: chat.history,
@@ -48,6 +55,7 @@ const HistorySection = () => {
             key={index}
             style={styles.historyTile}
             onPress={() => {
+              dispatch(setConvHistory(chats.history));
               router.push({pathname: '/chat', params: { chats: JSON.stringify(chats) }});
             }}
           >
@@ -91,6 +99,7 @@ const styles = StyleSheet.create({
   tileText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: 17
+    fontSize: 17,
+    // fontFamily: 'monospace'
   }
 })

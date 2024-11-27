@@ -1,16 +1,15 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Modal } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { askGemini, writeMessage } from '../../redux/chatSlice';
-import { useEffect, useRef, useState } from 'react';
-import { EventStatus } from '@/enums/status';
-import { CodeSnippet } from '@/components/CodeSnippet';
-import useCodeExtractor from '@/hooks/useCodeExtractor';
+import { useEffect, useRef } from 'react';
+import { EventStatus } from '../../enums/status';
+import { CodeSnippet } from '../../components/CodeSnippet';
+import useCodeExtractor from '../../hooks/useCodeExtractor';
 import SaveModal from './save-modal';
 import { useGlobalSearchParams } from 'expo-router';
-import History from '@/interfaces/history';
-import { parse } from '@babel/core';
+import History from '../../interfaces/history';
 
 const ChatScreen = () => {
 
