@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
@@ -63,6 +63,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.body}>
+      <StatusBar barStyle="light-content" backgroundColor="#141414" />
       <View style={styles.contentView}>
         <Text style={styles.headerStyle}>
           Chatter

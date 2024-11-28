@@ -2,8 +2,12 @@ import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
 import NavButton from "../components/navigation/NavButton";
+import CButton from "@/components/CButton";
+import { useRouter } from "expo-router";
 
 const App = () => {
+
+  const router = useRouter();
 
   const svgUri = Asset.fromModule(require('../assets/images/react.svg')).uri;
 
@@ -23,7 +27,10 @@ const App = () => {
                 marginBottom: 50,
               }}
             />
-            <Text style={styles.headerTitle}>Welcome to chatterbot</Text>
+            <Text style={styles.headerTitle}>
+              Welcome to <Text style={{ color: '#89D9F2'}}>chatter</Text>
+              <Text style={{ color: '#FBBF24' }}>bot</Text>
+            </Text>
             <View style={{
               marginTop: 50,
             }}>
@@ -37,12 +44,12 @@ const App = () => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <NavButton
-              navTo={'/home'}
-              color="#89D9F2"
-            >
-              Next
-            </NavButton>
+            <CButton
+              children='Next'
+              onPress={() => {
+                router.replace('/home');
+              }}
+            />
           </View>
 
         </View>

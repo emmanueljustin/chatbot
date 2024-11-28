@@ -8,6 +8,7 @@ import { EventStatus } from '../../enums/status';
 import { CodeSnippet } from '../../components/CodeSnippet';
 import useCodeExtractor from '../../hooks/useCodeExtractor';
 import SaveModal from './save-modal';
+import DeleteModal from './delete-modal';
 
 const ChatScreen = () => {
 
@@ -30,6 +31,7 @@ const ChatScreen = () => {
     <SafeAreaView style={styles.body}>
 
       <SaveModal />
+      <DeleteModal />
 
       <View style={styles.contentView}>
         <ScrollView ref={scrollViewRef} style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>

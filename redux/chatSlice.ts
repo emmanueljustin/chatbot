@@ -4,13 +4,13 @@ import MessageHistory from "@/interfaces/message-history";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import History from '@/interfaces/history';
 
 interface ChatState {
   status: EventStatus;
   message: string;
   convHistory: MessageHistory[];
-  showModal: boolean;
+  saveModal: boolean;
+  deleteModal: boolean;
   chatTitle: string;
   error: string;
 }
@@ -23,7 +23,8 @@ const initialState: ChatState = {
   status: EventStatus.initial,
   message: '',
   convHistory: [],
-  showModal: false,
+  saveModal: false,
+  deleteModal: false,
   chatTitle: '',
   error: '',
 }
@@ -104,14 +105,21 @@ const chatSlice = createSlice({
     writeMessage: (state, actions: PayloadAction<SendMessagePayload>) => {
       state.message = actions.payload.message;
     },
-    triggerPopup: (state, actions: PayloadAction<boolean>) => {
-      state.showModal = actions.payload;
+    triggerSavePopup: (state, actions: PayloadAction<boolean>) => {
+      state.saveModal = actions.payload;
+      state.chatTitle = '';
+    },
+    triggerDeletePopup: (state, actions: PayloadAction<boolean>) => {
+      state.deleteModal = actions.payload;
     },
     setChatTitle: (state, actions: PayloadAction<string>) => {
       state.chatTitle = actions.payload;
     },
     setConvHistory: (state, actions: PayloadAction<MessageHistory[]>) => {
       state.convHistory = actions.payload;
+      state.message = '';
+      state.saveModal = false;
+      state.deleteModal = false;
     }
   },
   extraReducers: (builder) => {
@@ -143,10 +151,16 @@ const chatSlice = createSlice({
     });
 
     builder.addCase(saveChat.pending, (state) => {
-      state.showModal = false;
+      state.saveModal = false;
     });
   }
 });
 
-export const { writeMessage, triggerPopup, setChatTitle, setConvHistory } = chatSlice.actions;
+export const {
+  writeMessage,
+  triggerSavePopup,
+  triggerDeletePopup,
+  setChatTitle,
+  setConvHistory
+} = chatSlice.actions;
 export default chatSlice.reducer;

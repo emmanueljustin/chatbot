@@ -2,52 +2,46 @@ import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { saveChat, setChatTitle, triggerPopup } from '../../redux/chatSlice';
+import { saveChat, setChatTitle, triggerSavePopup } from '../../redux/chatSlice';
+import CModal from '@/components/CModal';
+import { useRouter } from 'expo-router';
 
 const SaveModal = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { showModal, chatTitle, convHistory } = useSelector((state: RootState) => state.chat);
+  const { saveModal, chatTitle } = useSelector((state: RootState) => state.chat);
   return (
     <>
-      <Modal
-        visible={showModal}
-        transparent={true}
-        animationType="fade"
-      >
-        <View style={styles.modalBackDrop}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              Save this <Text style={{ color: '#FBBF24' }}>Conversation</Text>
-            </Text>
-            <TextInput 
-              style={styles.input}
-              multiline={true}
-              placeholder='Enter chat title here'
-              placeholderTextColor="rgba(255, 255, 255, 0.3)"
-              value={chatTitle}
-              onChangeText={(e) => dispatch(setChatTitle(e))}
-            />
-            
-            <TouchableOpacity
-              activeOpacity={chatTitle === '' ? 1 : 0.65}
-              style={[styles.button, { backgroundColor: chatTitle === '' ? '#B0B0B0' : '#89D9F2' }]}
-              onPress={chatTitle === ''
-                ? () => {} 
-                : () => dispatch(saveChat(chatTitle))}
-            >
-              <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
+      <CModal showModal={saveModal}>
+        <Text style={styles.modalTitle}>
+          Save this <Text style={{ color: '#FBBF24' }}>Conversation</Text>
+        </Text>
+        <TextInput 
+          style={styles.input}
+          multiline={true}
+          placeholder='Enter chat title here'
+          placeholderTextColor="rgba(255, 255, 255, 0.3)"
+          value={chatTitle}
+          onChangeText={(e) => dispatch(setChatTitle(e))}
+        />
+        
+        <TouchableOpacity
+          activeOpacity={chatTitle === '' ? 1 : 0.65}
+          style={[styles.button, { backgroundColor: chatTitle === '' ? '#B0B0B0' : '#89D9F2' }]}
+          onPress={chatTitle === ''
+            ? () => {} 
+            : () => dispatch(saveChat(chatTitle))}
+        >
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.65}
-              style={[styles.button, { marginTop: 10, backgroundColor: 'rgba(249, 250, 251, 0.2)' }]}
-              onPress={() => dispatch(triggerPopup(false))}
-            >
-              <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        <TouchableOpacity
+          activeOpacity={0.65}
+          style={[styles.button, { marginTop: 10, backgroundColor: 'rgba(249, 250, 251, 0.2)' }]}
+          onPress={() => dispatch(triggerSavePopup(false))}
+        >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </CModal>
     </>
   )
 }
