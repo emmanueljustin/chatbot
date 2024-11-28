@@ -40,4 +40,5 @@ yarn-error.*
 app-example
 
 .env
-firebaseConfig.ts
+eas.json
+# firebaseConfig.ts
