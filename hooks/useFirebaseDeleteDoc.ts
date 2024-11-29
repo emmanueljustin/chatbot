@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { db } from "../firebaseConfig"
-import { deleteDoc, doc } from "firebase/firestore"
+import { db } from "../firebaseConfig";
+import { deleteDoc, doc } from "firebase/firestore";
 import { EventStatus } from "@/enums/status";
  
 interface Props {

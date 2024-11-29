@@ -9,11 +9,24 @@ import { CodeSnippet } from '../../components/CodeSnippet';
 import useCodeExtractor from '../../hooks/useCodeExtractor';
 import SaveModal from './save-modal';
 import DeleteModal from './delete-modal';
+import useFirebaseUpdateDocs from '@/hooks/useFirebaseUpdateDocs';
+import { useFocusEffect, useGlobalSearchParams } from 'expo-router';
+import History from '../../interfaces/history';
+import React from 'react';
 
 const ChatScreen = () => {
 
+  const { chats } = useGlobalSearchParams<{ chats: string }>();
+  const parsedChats: History | undefined = chats ? JSON.parse(chats) : undefined;
+
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status } = useSelector((state: RootState) => state.chat);
+
+  const { updateDocument } = useFirebaseUpdateDocs({
+    collectionName: 'chat-history',
+    docId: parsedChats?.uid!,
+    history: convHistory,
+  });
 
   const extractedCode = useCodeExtractor({ convHistory: convHistory });
 
@@ -38,6 +51,20 @@ const ChatScreen = () => {
     <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
       <CodeSnippet code={code} />
     </View>
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (parsedChats) {
+        if (convHistory.length > 0) {
+          updateDocument();
+        }
+      }
+
+      return () => {
+        console.log('ChatScreen unfocused');
+      };
+    }, [convHistory])
   );
 
   return (
