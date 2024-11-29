@@ -1,9 +1,9 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { askGemini, writeMessage } from '../../redux/chatSlice';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { EventStatus } from '../../enums/status';
 import { CodeSnippet } from '../../components/CodeSnippet';
 import useCodeExtractor from '../../hooks/useCodeExtractor';
@@ -17,15 +17,28 @@ const ChatScreen = () => {
 
   const extractedCode = useCodeExtractor({ convHistory: convHistory });
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    if (scrollViewRef.current) {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: false });
-      }, 100);
-    }
-  }, [convHistory]);
+  const renderMessage = ({ item, index }: { item: any, index: number }) => (
+    <View
+      key={index}
+      style={[
+        styles.messageBubble,
+        {
+          backgroundColor: item.role === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
+          alignSelf: item.role === 'user' ? 'flex-end' : 'flex-start',
+        }
+      ]}
+    >
+      <Text style={styles.messageText}>{item.parts[0].text}</Text>
+    </View>
+  );
+
+  const renderCodeSnippet = ({ code, index }: { code: string, index: number }) => (
+    <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
+      <CodeSnippet code={code} />
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.body}>
@@ -34,34 +47,33 @@ const ChatScreen = () => {
       <DeleteModal />
 
       <View style={styles.contentView}>
-        <ScrollView ref={scrollViewRef} style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>
-          {convHistory.map((msg, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageBubble,
-                {
-                  backgroundColor: msg.role === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
-                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                }
-              ]}
-            >
-              <Text style={styles.messageText}>{msg.parts[0].text}</Text>
-            </View>
-          ))}
-          <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
-            {extractedCode.map((code, index) => (
-              <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
-                <CodeSnippet code={code} />
-              </View>
-            ))}
+        <FlatList
+          inverted
+          ref={scrollViewRef}
+          data={convHistory}
+          renderItem={renderMessage}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.msgBoxContent}
+          ListFooterComponent={
+            convHistory.length > 0 ?
+              convHistory[convHistory.length - 1].role !== 'user' ?
+                extractedCode.length > 0 ? (
+                  <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
+                    {extractedCode.map((code, index) => renderCodeSnippet({code: code, index: index}))}
+                  </View>
+                ) : null
+              : null
+            : null
+          }
+          // onContentSizeChange={() => {
+          //   scrollViewRef.current?.scrollToEnd({ animated: true });
+          // }}
+        />
+        {status === EventStatus.loading && (
+          <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
+            <Text style={styles.messageText}>Bot is responding....</Text>
           </View>
-          {status === EventStatus.loading && (
-            <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
-              <Text style={styles.messageText}>Bot is responding....</Text>
-            </View>
-          )}
-        </ScrollView>
+        )}
         <View style={styles.userInputContainer}>
           <TextInput 
             style={styles.input}
@@ -114,9 +126,10 @@ const styles = StyleSheet.create({
   },
   msgBoxContent: {
     flexGrow: 1,
+    flexDirection: 'column-reverse',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
     paddingBottom: 20,
+    paddingHorizontal: 10,
   },
   userInputContainer: {
     padding: 10,
