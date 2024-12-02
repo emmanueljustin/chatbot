@@ -2,8 +2,6 @@ import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollVie
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
-// import { collection, addDoc, onSnapshot } from 'firebase/firestore'
-// import { db } from '@/FirebaseConfig';
 import HistorySection from './history-section';
 import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
@@ -23,44 +21,6 @@ const HomeScreen = () => {
 
   const router = useRouter();
 
-  // const [data, setData] = useState<Users[]>([]);
-
-  // useEffect(() => {
-  //   const unsubscribe = onSnapshot(
-  //     collection(db, 'users'),
-  //     (querySnapshot) => {
-  //       const usersData: Users[] = [];
-  //       querySnapshot.forEach((doc) => {
-  //         const user = doc.data();
-  //         usersData.push({
-  //           first: user.first,
-  //           last: user.last,
-  //           born: user.born,
-  //         });
-  //       });
-  //       setData(usersData);
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching data: ', error);
-  //     }
-  //   );
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // const AddData = async () => {
-  //   try {
-  //     const docRef = await addDoc(collection(db, "users"), {
-  //       first: "Ada",
-  //       last: "Lovelace",
-  //       born: 1815
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // }
-
   return (
     <SafeAreaView style={styles.body}>
       <StatusBar barStyle="light-content" backgroundColor="#141414" />
@@ -69,10 +29,6 @@ const HomeScreen = () => {
           Chatter
           <Text style={{ color: '#FBBF24' }}>bot!</Text>
         </Text>
-
-        {/* {data.map((users, index) => (
-          <Text key={index} style={{ fontWeight: 'bold', color: '#fff' }}>{users.first}</Text>
-        ))} */}
         
         <View style={styles.getStartedBox}>
           <Image
@@ -130,7 +86,6 @@ const HomeScreen = () => {
           />
         </View>
 
-        {/* <Button title='Add Data' onPress={() => AddData()} /> */}
       </View>
     </SafeAreaView>
   )

@@ -1,15 +1,23 @@
 import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
-import NavButton from "../components/navigation/NavButton";
 import CButton from "@/components/CButton";
 import { useRouter } from "expo-router";
+import CLocalizationButton from "@/components/CLocalizationButton";
+import { Switch } from 'react-native-switch';
+import { useState } from "react";
+import useLocalization from "@/hooks/useLocalization";
 
 const App = () => {
+
+  const { t } = useLocalization();
 
   const router = useRouter();
 
   const svgUri = Asset.fromModule(require('../assets/images/react.svg')).uri;
+
+  const [active, setActive] = useState<boolean>(false);
+
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -17,6 +25,15 @@ const App = () => {
         <StatusBar barStyle="light-content" backgroundColor="#141414" />
 
         <View style={styles.body}>
+          
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <CLocalizationButton />
+          </View>
+          
 
           <View  style={styles.headerContainer}>
             <Image
@@ -27,15 +44,15 @@ const App = () => {
                 marginBottom: 50,
               }}
             />
-            <Text style={styles.headerTitle}>
-              Welcome to <Text style={{ color: '#89D9F2'}}>chatter</Text>
-              <Text style={{ color: '#FBBF24' }}>bot</Text>
+            <Text style={[styles.headerTitle, { fontWeight: active ? '900': '400' }]}>
+              {t('welcome')}<Text style={{ color: '#89D9F2'}}>{t('chatter')}</Text>
+              <Text style={{ color: '#FBBF24' }}>{t('bot')}</Text>
             </Text>
             <View style={{
               marginTop: 50,
             }}>
               <Text style={styles.headerSubtitle}>
-                Developed by
+                {t('develop')}
               </Text>
               <Text style={[styles.headerSubtitle, {color: '#FBBF24'}]}>
                 Emmanuel Justin Atienza
