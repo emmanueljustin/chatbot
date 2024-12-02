@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { askGemini, writeMessage } from '../../redux/chatSlice';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { EventStatus } from '../../enums/status';
 import { CodeSnippet } from '../../components/CodeSnippet';
 import useCodeExtractor from '../../hooks/useCodeExtractor';
@@ -67,6 +67,13 @@ const ChatScreen = () => {
     }, [convHistory])
   );
 
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  }, [convHistory]);
+
   return (
     <SafeAreaView style={styles.body}>
 
@@ -92,9 +99,6 @@ const ChatScreen = () => {
               : null
             : null
           }
-          // onContentSizeChange={() => {
-          //   scrollViewRef.current?.scrollToEnd({ animated: true });
-          // }}
         />
         {status === EventStatus.loading && (
           <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
