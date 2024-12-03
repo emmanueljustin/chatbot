@@ -4,8 +4,6 @@ import { Asset } from "expo-asset";
 import CButton from "@/components/CButton";
 import { useRouter } from "expo-router";
 import CLocalizationButton from "@/components/CLocalizationButton";
-import { Switch } from 'react-native-switch';
-import { useState } from "react";
 import useLocalization from "@/hooks/useLocalization";
 
 const App = () => {
