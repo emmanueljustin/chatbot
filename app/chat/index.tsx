@@ -13,6 +13,7 @@ import useFirebaseUpdateDocs from '@/hooks/useFirebaseUpdateDocs';
 import { useFocusEffect, useGlobalSearchParams } from 'expo-router';
 import History from '../../interfaces/history';
 import React from 'react';
+import useLocalization from '@/hooks/useLocalization';
 
 const ChatScreen = () => {
 
@@ -21,6 +22,8 @@ const ChatScreen = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status } = useSelector((state: RootState) => state.chat);
+
+  const { t } = useLocalization();
 
   const { updateDocument } = useFirebaseUpdateDocs({
     collectionName: 'chat-history',
@@ -109,7 +112,7 @@ const ChatScreen = () => {
           <TextInput 
             style={styles.input}
             multiline={true}
-            placeholder='Type your question here'
+            placeholder={t('chats.inputPlaceholder')}
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
             value={message}
             onChangeText={(e) => dispatch(writeMessage({message: e}))}

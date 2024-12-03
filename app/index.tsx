@@ -10,14 +10,9 @@ import useLocalization from "@/hooks/useLocalization";
 
 const App = () => {
 
-  const { t } = useLocalization();
+  const { t, currentLanguage } = useLocalization();
 
   const router = useRouter();
-
-  const svgUri = Asset.fromModule(require('../assets/images/react.svg')).uri;
-
-  const [active, setActive] = useState<boolean>(false);
-
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -26,11 +21,7 @@ const App = () => {
 
         <View style={styles.body}>
           
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          <View style={styles.localeBtn}>
             <CLocalizationButton />
           </View>
           
@@ -44,15 +35,32 @@ const App = () => {
                 marginBottom: 50,
               }}
             />
-            <Text style={[styles.headerTitle, { fontWeight: active ? '900': '400' }]}>
-              {t('welcome')}<Text style={{ color: '#89D9F2'}}>{t('chatter')}</Text>
-              <Text style={{ color: '#FBBF24' }}>{t('bot')}</Text>
-            </Text>
+            {currentLanguage === "en" && (
+              <Text style={styles.headerTitle}>
+                Welcome to<Text style={{ color: '#89D9F2'}}>Chatter</Text>
+                <Text style={{ color: '#FBBF24' }}>bot</Text>
+              </Text>
+            )}
+            {currentLanguage === "ja" && (
+              <Text style={[
+                styles.headerTitle,
+                {
+                  fontFamily: 'ZenAntiqueSoft-Regular',
+                  fontWeight: '900'
+                }
+              ]}>
+                <Text style={{ color: '#89D9F2'}}>チャタ</Text>
+                <Text style={{ color: '#FBBF24' }}>ーボット</Text>
+                 へようこそ
+              </Text>
+            )}
             <View style={{
               marginTop: 50,
             }}>
-              <Text style={styles.headerSubtitle}>
-                {t('develop')}
+              <Text style={[styles.headerSubtitle, {
+                fontFamily: currentLanguage === "ja" ? 'ZenAntiqueSoft-Regular': 'RubikMonoOne-Regular',
+              }]}>
+                {t('intro.develop')}
               </Text>
               <Text style={[styles.headerSubtitle, {color: '#FBBF24'}]}>
                 Emmanuel Justin Atienza
@@ -62,7 +70,7 @@ const App = () => {
 
           <View style={styles.buttonContainer}>
             <CButton
-              children='Next'
+              children={t('intro.next')}
               onPress={() => {
                 router.replace('/home');
               }}
@@ -87,6 +95,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     height: '100%',
+  },
+  localeBtn: {
+    marginTop: 20,
+    marginRight: 20,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   headerContainer: {
     position: 'relative',

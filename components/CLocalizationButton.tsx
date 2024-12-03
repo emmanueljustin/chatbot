@@ -5,13 +5,13 @@ import useLocalization from '@/hooks/useLocalization';
 
 const CLocalizationButton = () => {
   
-  const { changeLanguage } = useLocalization();
+  const { changeLanguage, currentLanguage } = useLocalization();
 
   const [active, setActive] = useState<boolean>(false);
 
   return (
     <Switch
-      value={active}
+      value={currentLanguage === "ja" ? true : false}
       onValueChange={(val: boolean) => {
         setActive(val);
         changeLanguage(val ? 'ja' : 'en');
@@ -21,7 +21,7 @@ const CLocalizationButton = () => {
           color: '#fff',
           fontWeight: 'bold'
         }}>
-          {active ? 'JA' : 'EN'}
+          {currentLanguage === "ja" ? 'JA' : 'EN'}
         </Text>
       }
       activeText={''}

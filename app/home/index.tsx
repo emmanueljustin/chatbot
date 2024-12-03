@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { setConvHistory } from '../../redux/chatSlice';
 import CButton from '../../components/CButton';
+import useLocalization from '@/hooks/useLocalization';
 
 const HomeScreen = () => {
 
@@ -21,13 +22,20 @@ const HomeScreen = () => {
 
   const router = useRouter();
 
+  const { t, currentLanguage } = useLocalization();
+
   return (
     <SafeAreaView style={styles.body}>
       <StatusBar barStyle="light-content" backgroundColor="#141414" />
       <View style={styles.contentView}>
-        <Text style={styles.headerStyle}>
-          Chatter
-          <Text style={{ color: '#FBBF24' }}>bot!</Text>
+        <Text style={[
+          styles.headerStyle,
+          {
+            fontWeight: currentLanguage === "ja" ? '900' : '400'
+          }
+        ]}>
+          {t('home.title')}
+          <Text style={{ color: '#FBBF24' }}>{t('home.title2')}</Text>
         </Text>
         
         <View style={styles.getStartedBox}>
@@ -39,7 +47,7 @@ const HomeScreen = () => {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-            Welcome
+            {t('home.greetingsTitle')}
           </Text>
           <View style={{ 
             marginTop: 10,
@@ -49,7 +57,7 @@ const HomeScreen = () => {
               fontWeight: '500',
               fontSize: 17,
             }}>
-              Transform Your Interactions Powered by Gemini AI.
+              {t('home.greetings')}
             </Text>
           </View>
         </View>
@@ -60,7 +68,7 @@ const HomeScreen = () => {
               <IconAnt name='staro' size={20} color={'#89D9F2'} />
             </View>
             <Text style={styles.contentText}>
-              Generate new ideas and increase your productivity
+              {t('home.info1')}
             </Text>
           </View>
 
@@ -69,7 +77,7 @@ const HomeScreen = () => {
               <IconEnt name='code' size={20} color={'#89D9F2'} />
             </View>
             <Text style={styles.contentText}>
-              Open source and free
+              {t('home.info2')}
             </Text>
           </View>
         </View>
@@ -78,7 +86,7 @@ const HomeScreen = () => {
 
         <View style={{ marginTop: 'auto' }}>
           <CButton
-            children='Chats'
+            children={t('home.chat')}
             onPress={() => {
               dispatch(setConvHistory([]));
               router.push('/chat');

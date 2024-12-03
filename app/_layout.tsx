@@ -15,6 +15,7 @@ const RootLayout = () => {
     "Rubik-Italic-VariableFont_wght": require("../assets/fonts/Rubik-Italic-VariableFont_wght.ttf"),
     "RubikMonoOne-Regular": require("../assets/fonts/RubikMonoOne-Regular.ttf"),
     "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
+    "ZenAntiqueSoft-Regular": require("../assets/fonts/ZenAntiqueSoft-Regular.ttf"),
   });
   
   useEffect(() => {

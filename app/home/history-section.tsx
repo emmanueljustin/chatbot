@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { setConvHistory } from '../../redux/chatSlice';
+import useLocalization from '@/hooks/useLocalization';
 
 const HistorySection = () => {
 
@@ -15,6 +16,8 @@ const HistorySection = () => {
 
   const router = useRouter();
   const [chatHistory, setChatHistory] = useState<History[]>([])
+
+  const { t } = useLocalization();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -43,7 +46,7 @@ const HistorySection = () => {
   return (
     <>
       <Text style={styles.header}>
-        History
+        {t('home.history')}
       </Text>
 
       <ScrollView style={{
