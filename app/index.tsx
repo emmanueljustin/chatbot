@@ -23,7 +23,6 @@ const App = () => {
             <CLocalizationButton />
           </View>
           
-
           <View  style={styles.headerContainer}>
             <Image
               source={require("../assets/images/robot.png")}
