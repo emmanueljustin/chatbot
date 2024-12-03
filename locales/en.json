@@ -1,6 +1,28 @@
 {
-  "welcome": "Welcome to",
-  "chatter": "Chatter",
-  "bot": "Bot",
-  "develop": "Developed by"
+  "intro": {
+    "welcome": "Welcome to",
+    "chatter": "Chatter",
+    "bot": "Bot",
+    "develop": "Developed by",
+    "next": "Next"
+  },
+  "home": {
+    "title": "Chatter",
+    "title2": "Bot!",
+    "greetingsTitle": "Welcome",
+    "greetings": "Transform Your Interactions Powered by Gemini AI.",
+    "info1": "Generate new ideas and increase your productivity",
+    "info2": "Open source and free",
+    "history": "History",
+    "chat": "Chat"
+  },
+  "chats": {
+    "defaultTitle": "Chat Bot",
+    "inputPlaceholder": "Type your question here",
+    "enterTitle": "Enter chat title here",
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "deleteMessage": "Are you sure you want to delete this conversation? Once deleted it wont be retrieved again"
+  }
 }

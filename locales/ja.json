@@ -1,6 +1,28 @@
 {
-  "welcome": "ようこそ",
-  "chatter": "おしゃべり",
-  "bot": "ボット",
-  "develop": "によって開発されました"
+  "intro": {
+    "welcome": "ようこそ",
+    "chatter": "おしゃべり",
+    "bot": "ボット",
+    "develop": "によって開発されました",
+    "next": "次"
+  },
+  "home": {
+    "title": "おしゃべり",
+    "title2": "ボット！",
+    "greetingsTitle": "いらっしゃいませ",
+    "greetings": "Gemini AIを搭載した相互作用を変換します。",
+    "info1": "新しいアイデアを生み出し、生産性を向上させます",
+    "info2": "オープンソースと無料",
+    "history": "歴史",
+    "chat": "チャット"
+  },
+  "chats": {
+    "defaultTitle": "チャットボット",
+    "inputPlaceholder": "ここに質問を入力してください",
+    "enterTitle": "チャットのタイトル",
+    "save": "保存",
+    "delete": "消去",
+    "cancel": "キャンセル",
+    "deleteMessage": "この会話を削除してもよろしいですか?一度削除すると再度取得することはできません"
+  }
 }

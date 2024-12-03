@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from './locales/en.json';
 import ja from './locales/ja.json';
 
@@ -21,6 +22,14 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    saveMissing: true,
+    backend: {
+      loadPath: './locales/{{lng}}.json',
+    },
   });
+
+i18n.on('languageChanged', (lng) => {
+  AsyncStorage.setItem('lang', lng);
+});
 
 export default i18n;
