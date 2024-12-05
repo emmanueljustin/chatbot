@@ -4,6 +4,7 @@ import { AppDispatch } from "../../redux/store";
 import { triggerDeletePopup, triggerSavePopup } from "../../redux/chatSlice";
 import History from '../../interfaces/history';
 import AppBarButton from "./app-bar-button";
+import useLocalization from "@/hooks/useLocalization";
 
 const ChatLayout = () => {
 
@@ -12,6 +13,8 @@ const ChatLayout = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const { t } = useLocalization();
+
   return (
     <Stack screenOptions={{
       animation: 'none'
@@ -19,7 +22,7 @@ const ChatLayout = () => {
       <Stack.Screen
         name='index'
         options={{ 
-          title: parsedChats ? parsedChats.chatTitle : 'Chat Bot',
+          title: parsedChats ? parsedChats.chatTitle : t('chats.defaultTitle'),
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: '#141414',

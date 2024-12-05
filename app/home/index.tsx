@@ -2,14 +2,13 @@ import { StyleSheet, Text, View, Dimensions, Image, Button, Pressable, ScrollVie
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
-// import { collection, addDoc, onSnapshot } from 'firebase/firestore'
-// import { db } from '@/FirebaseConfig';
 import HistorySection from './history-section';
 import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { setConvHistory } from '../../redux/chatSlice';
 import CButton from '../../components/CButton';
+import useLocalization from '@/hooks/useLocalization';
 
 const HomeScreen = () => {
 
@@ -23,56 +22,21 @@ const HomeScreen = () => {
 
   const router = useRouter();
 
-  // const [data, setData] = useState<Users[]>([]);
-
-  // useEffect(() => {
-  //   const unsubscribe = onSnapshot(
-  //     collection(db, 'users'),
-  //     (querySnapshot) => {
-  //       const usersData: Users[] = [];
-  //       querySnapshot.forEach((doc) => {
-  //         const user = doc.data();
-  //         usersData.push({
-  //           first: user.first,
-  //           last: user.last,
-  //           born: user.born,
-  //         });
-  //       });
-  //       setData(usersData);
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching data: ', error);
-  //     }
-  //   );
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // const AddData = async () => {
-  //   try {
-  //     const docRef = await addDoc(collection(db, "users"), {
-  //       first: "Ada",
-  //       last: "Lovelace",
-  //       born: 1815
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // }
+  const { t, currentLanguage } = useLocalization();
 
   return (
     <SafeAreaView style={styles.body}>
       <StatusBar barStyle="light-content" backgroundColor="#141414" />
       <View style={styles.contentView}>
-        <Text style={styles.headerStyle}>
-          Chatter
-          <Text style={{ color: '#FBBF24' }}>bot!</Text>
+        <Text style={[
+          styles.headerStyle,
+          {
+            fontWeight: currentLanguage === "ja" ? '900' : '400'
+          }
+        ]}>
+          {t('home.title')}
+          <Text style={{ color: '#FBBF24' }}>{t('home.title2')}</Text>
         </Text>
-
-        {/* {data.map((users, index) => (
-          <Text key={index} style={{ fontWeight: 'bold', color: '#fff' }}>{users.first}</Text>
-        ))} */}
         
         <View style={styles.getStartedBox}>
           <Image
@@ -83,7 +47,7 @@ const HomeScreen = () => {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-            Welcome
+            {t('home.greetingsTitle')}
           </Text>
           <View style={{ 
             marginTop: 10,
@@ -93,7 +57,7 @@ const HomeScreen = () => {
               fontWeight: '500',
               fontSize: 17,
             }}>
-              Transform Your Interactions Powered by Gemini AI.
+              {t('home.greetings')}
             </Text>
           </View>
         </View>
@@ -104,7 +68,7 @@ const HomeScreen = () => {
               <IconAnt name='staro' size={20} color={'#89D9F2'} />
             </View>
             <Text style={styles.contentText}>
-              Generate new ideas and increase your productivity
+              {t('home.info1')}
             </Text>
           </View>
 
@@ -113,7 +77,7 @@ const HomeScreen = () => {
               <IconEnt name='code' size={20} color={'#89D9F2'} />
             </View>
             <Text style={styles.contentText}>
-              Open source and free
+              {t('home.info2')}
             </Text>
           </View>
         </View>
@@ -122,7 +86,7 @@ const HomeScreen = () => {
 
         <View style={{ marginTop: 'auto' }}>
           <CButton
-            children='Chats'
+            children={t('home.chat')}
             onPress={() => {
               dispatch(setConvHistory([]));
               router.push('/chat');
@@ -130,7 +94,6 @@ const HomeScreen = () => {
           />
         </View>
 
-        {/* <Button title='Add Data' onPress={() => AddData()} /> */}
       </View>
     </SafeAreaView>
   )

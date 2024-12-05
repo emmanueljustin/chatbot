@@ -7,6 +7,7 @@ import { useGlobalSearchParams, useRouter } from 'expo-router'
 import useFirebaseDeleteDoc from '@/hooks/useFirebaseDeleteDoc'
 import History from '../../interfaces/history';
 import { triggerDeletePopup } from '@/redux/chatSlice'
+import useLocalization from '@/hooks/useLocalization'
 
 const DeleteModal = () => {
 
@@ -22,15 +23,34 @@ const DeleteModal = () => {
     collectionName: 'chat-history',
     docId: parsedChats?.uid!,
   });
+
+  const { t, currentLanguage } = useLocalization();
   
   return (
     <>
       <CModal showModal={deleteModal}>
-        <Text style={styles.modalTitle}>
-          Delete <Text style={{ color: '#89D9F2' }}>chat</Text>
-        </Text>
+
+        { currentLanguage === "en" && (
+          <Text style={styles.modalTitle}>
+            Delete <Text style={{ color: '#89D9F2' }}>chat</Text>
+          </Text>
+        )}
+
+        { currentLanguage === "ja" && (
+          <Text style={[
+            styles.modalTitle,
+            {
+              fontFamily: 'ZenAntiqueSoft-Regular',
+              fontWeight: '900',
+              fontSize: 26
+            }
+          ]}>
+            <Text style={{ color: '#89D9F2' }}>チャット</Text>を削除する
+          </Text>
+        )}
+        
         <Text style={styles.modalSubtitle}>
-          Are you sure you want to delete this conversation? Once deleted it wont be retrieved again
+          {t('chats.deleteMessage')}
         </Text>
 
         <View style={styles.btnGroup}>
@@ -43,7 +63,7 @@ const DeleteModal = () => {
               router.dismiss();
             }}
           >
-            <Text style={styles.buttonText}>Delete</Text>
+            <Text style={styles.buttonText}>{t('chats.delete')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -51,7 +71,7 @@ const DeleteModal = () => {
             style={[styles.button, { backgroundColor: 'rgba(249, 250, 251, 0.2)' }]}
             onPress={() => dispatch(triggerDeletePopup(false))}
           >
-            <Text style={styles.buttonText}>Cancel</Text>
+            <Text style={styles.buttonText}>{t('chats.cancel')}</Text>
           </TouchableOpacity>
         </View>
       </CModal>

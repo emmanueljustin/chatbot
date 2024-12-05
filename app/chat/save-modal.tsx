@@ -5,20 +5,41 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { saveChat, setChatTitle, triggerSavePopup } from '../../redux/chatSlice';
 import CModal from '@/components/CModal';
 import { useRouter } from 'expo-router';
+import useLocalization from '@/hooks/useLocalization';
 
 const SaveModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { saveModal, chatTitle } = useSelector((state: RootState) => state.chat);
+
+  const { t, currentLanguage } = useLocalization();
+
   return (
     <>
       <CModal showModal={saveModal}>
-        <Text style={styles.modalTitle}>
-          Save this <Text style={{ color: '#FBBF24' }}>Conversation</Text>
-        </Text>
+        { currentLanguage === "en" && (
+          <Text style={styles.modalTitle}>
+            Save this <Text style={{ color: '#FBBF24' }}>Conversation</Text>
+          </Text>
+        )}
+
+        { currentLanguage === "ja" && (
+          <Text style={[
+            styles.modalTitle,
+            {
+              color: '#FBBF24',
+              fontFamily: 'ZenAntiqueSoft-Regular',
+              fontWeight: '900',
+              fontSize: 26
+            }
+          ]}>
+            この会話を保存する
+          </Text>
+        )}
+
         <TextInput 
           style={styles.input}
           multiline={true}
-          placeholder='Enter chat title here'
+          placeholder={t('chats.enterTitle')}
           placeholderTextColor="rgba(255, 255, 255, 0.3)"
           value={chatTitle}
           onChangeText={(e) => dispatch(setChatTitle(e))}
@@ -31,7 +52,7 @@ const SaveModal = () => {
             ? () => {} 
             : () => dispatch(saveChat(chatTitle))}
         >
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={styles.buttonText}>{t('chats.save')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -39,7 +60,7 @@ const SaveModal = () => {
           style={[styles.button, { marginTop: 10, backgroundColor: 'rgba(249, 250, 251, 0.2)' }]}
           onPress={() => dispatch(triggerSavePopup(false))}
         >
-          <Text style={styles.buttonText}>Cancel</Text>
+          <Text style={styles.buttonText}>{t('chats.cancel')}</Text>
         </TouchableOpacity>
       </CModal>
     </>

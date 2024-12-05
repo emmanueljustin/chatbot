@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,21 +9,71 @@ import { CodeSnippet } from '../../components/CodeSnippet';
 import useCodeExtractor from '../../hooks/useCodeExtractor';
 import SaveModal from './save-modal';
 import DeleteModal from './delete-modal';
+import useFirebaseUpdateDocs from '@/hooks/useFirebaseUpdateDocs';
+import { useFocusEffect, useGlobalSearchParams } from 'expo-router';
+import History from '../../interfaces/history';
+import React from 'react';
+import useLocalization from '@/hooks/useLocalization';
 
 const ChatScreen = () => {
+
+  const { chats } = useGlobalSearchParams<{ chats: string }>();
+  const parsedChats: History | undefined = chats ? JSON.parse(chats) : undefined;
 
   const dispatch = useDispatch<AppDispatch>();
   const { message, convHistory, status } = useSelector((state: RootState) => state.chat);
 
+  const { t } = useLocalization();
+
+  const { updateDocument } = useFirebaseUpdateDocs({
+    collectionName: 'chat-history',
+    docId: parsedChats?.uid!,
+    history: convHistory,
+  });
+
   const extractedCode = useCodeExtractor({ convHistory: convHistory });
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<FlatList>(null);
+
+  const renderMessage = ({ item, index }: { item: any, index: number }) => (
+    <View
+      key={index}
+      style={[
+        styles.messageBubble,
+        {
+          backgroundColor: item.role === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
+          alignSelf: item.role === 'user' ? 'flex-end' : 'flex-start',
+        }
+      ]}
+    >
+      <Text style={styles.messageText}>{item.parts[0].text}</Text>
+    </View>
+  );
+
+  const renderCodeSnippet = ({ code, index }: { code: string, index: number }) => (
+    <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
+      <CodeSnippet code={code} />
+    </View>
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (parsedChats) {
+        if (convHistory.length > 0) {
+          updateDocument();
+        }
+      }
+
+      return () => {
+        console.log('ChatScreen unfocused');
+      };
+    }, [convHistory])
+  );
+
 
   useEffect(() => {
     if (scrollViewRef.current) {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: false });
-      }, 100);
+      scrollViewRef.current.scrollToOffset({ offset: 0, animated: true });
     }
   }, [convHistory]);
 
@@ -34,39 +84,35 @@ const ChatScreen = () => {
       <DeleteModal />
 
       <View style={styles.contentView}>
-        <ScrollView ref={scrollViewRef} style={styles.msgBox} contentContainerStyle={styles.msgBoxContent}>
-          {convHistory.map((msg, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageBubble,
-                {
-                  backgroundColor: msg.role === 'user' ? '#38BDf8' : 'rgba(128, 128, 128, 0.5)',
-                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                }
-              ]}
-            >
-              <Text style={styles.messageText}>{msg.parts[0].text}</Text>
-            </View>
-          ))}
-          <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
-            {extractedCode.map((code, index) => (
-              <View key={index} style={{ width: '90%', marginBottom: 10, alignSelf: 'flex-start'}}>
-                <CodeSnippet code={code} />
-              </View>
-            ))}
+        <FlatList
+          inverted
+          ref={scrollViewRef}
+          data={convHistory}
+          renderItem={renderMessage}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.msgBoxContent}
+          ListFooterComponent={
+            convHistory.length > 0 ?
+              convHistory[convHistory.length - 1].role !== 'user' ?
+                extractedCode.length > 0 ? (
+                  <View style={{ height: 'auto', width: '100%', marginTop: 10 }}>
+                    {extractedCode.map((code, index) => renderCodeSnippet({code: code, index: index}))}
+                  </View>
+                ) : null
+              : null
+            : null
+          }
+        />
+        {status === EventStatus.loading && (
+          <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
+            <Text style={styles.messageText}>Bot is responding....</Text>
           </View>
-          {status === EventStatus.loading && (
-            <View style={[styles.messageBubble, { alignSelf: 'flex-start' }]}>
-              <Text style={styles.messageText}>Bot is responding....</Text>
-            </View>
-          )}
-        </ScrollView>
+        )}
         <View style={styles.userInputContainer}>
           <TextInput 
             style={styles.input}
             multiline={true}
-            placeholder='Type your question here'
+            placeholder={t('chats.inputPlaceholder')}
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
             value={message}
             onChangeText={(e) => dispatch(writeMessage({message: e}))}
@@ -114,9 +160,10 @@ const styles = StyleSheet.create({
   },
   msgBoxContent: {
     flexGrow: 1,
+    flexDirection: 'column-reverse',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
     paddingBottom: 20,
+    paddingHorizontal: 10,
   },
   userInputContainer: {
     padding: 10,
