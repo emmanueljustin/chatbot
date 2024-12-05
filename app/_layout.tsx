@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Stack, SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import store from '../redux/store';
 
 import "../assets/global.css"
 
@@ -15,6 +15,7 @@ const RootLayout = () => {
     "Rubik-Italic-VariableFont_wght": require("../assets/fonts/Rubik-Italic-VariableFont_wght.ttf"),
     "RubikMonoOne-Regular": require("../assets/fonts/RubikMonoOne-Regular.ttf"),
     "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
+    "ZenAntiqueSoft-Regular": require("../assets/fonts/ZenAntiqueSoft-Regular.ttf"),
   });
   
   useEffect(() => {
@@ -27,10 +28,13 @@ const RootLayout = () => {
 
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(home)' options={{ headerShown: false }} />
-        <Stack.Screen name='(chat)' options={{ headerShown: false }} />
+      <Stack screenOptions={{
+        animation: 'none',
+        headerShown: false,
+      }}>
+        <Stack.Screen name='index' />
+        <Stack.Screen name='home' />
+        <Stack.Screen name='chat' />
       </Stack>
     </Provider>
   )

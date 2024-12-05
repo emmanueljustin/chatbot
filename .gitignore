@@ -9,6 +9,8 @@ dist/
 web-build/
 expo-env.d.ts
 
+/android
+
 # Native
 *.orig.*
 *.jks
@@ -38,3 +40,5 @@ yarn-error.*
 app-example
 
 .env
+eas.json
+# firebaseConfig.ts
